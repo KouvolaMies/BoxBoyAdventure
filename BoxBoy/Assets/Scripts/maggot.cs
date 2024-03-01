@@ -35,8 +35,4 @@ public class maggot : MonoBehaviour
             sprite.flipX = false;
         }
     }
-
-    public void Die(){
-        Destroy(this.gameObject);
-    }
 }

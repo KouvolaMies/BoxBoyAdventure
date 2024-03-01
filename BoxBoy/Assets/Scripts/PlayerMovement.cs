@@ -1,21 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
-public class player : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    //unity component variables
+    //unity components
     private Rigidbody2D rb;
-    private Animator anim;
-    private SpriteRenderer sprite;
-
-    //script references
-    public gamemanager gm;
-    public maggot Maggot;
-
-    //animation variables
-    private enum AnimState{idle, running, jumping, falling};
 
     //movement variables
     private float xvel;
@@ -35,20 +25,11 @@ public class player : MonoBehaviour
     [SerializeField] public float castDistanceR;
     [SerializeField] public LayerMask jumpableGround;
 
-    //double jump particle variables
-    [SerializeField] private Rigidbody2D DJPrefab;
-    [SerializeField] private Transform DJPSpawn;
-
-    //coin variables
-    [SerializeField] private GameObject Coins;
-    private Tilemap coinmap;
-    private Vector2 hitPosition;
+    //script references
+    public PlayerAnimation panim;
 
     private void Start(){
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        sprite = GetComponent<SpriteRenderer>();
-        coinmap = Coins.GetComponent<Tilemap>();
         
         //sets the boxcasts to the right positions, just in case it gets reset for some reason
         boxSizeD = new Vector2(0.9f, 0.1f);
@@ -93,8 +74,6 @@ public class player : MonoBehaviour
         }
         //apply speed
         rb.velocity = new Vector2(xvel, rb.velocity.y);
-        //run animation updater
-        UpdateAnim();
     }
 
     private void movement(){
@@ -155,7 +134,7 @@ public class player : MonoBehaviour
             }
             else{
                 rb.velocity = new Vector2(xvel, jumpforce * 0.8f);
-                DJParticle();
+                panim.DJParticle();
             }
             if(DoubleJump == true && !IsGrounded()){
                 DoubleJump = false;
@@ -190,80 +169,6 @@ public class player : MonoBehaviour
         else{
             return false;
         }
-    }
-
-    //collision checks
-    private void OnCollisionEnter2D(Collision2D collision){
-        if(collision.collider.tag == "trap"){
-            gm.GameOver();
-        }
-        if(collision.collider.tag == "maggot"){
-            if(rb.velocity.y < -0.01f){
-                Maggot.Die();
-                rb.velocity = new Vector2(rb.velocity.x, 5);
-            }
-            else{
-                gm.GameOver();
-            }
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision){
-        //when hitting coins
-        if(collision.CompareTag("coin")){
-            hitPosition = new Vector2(transform.position.x, (transform.position.y + 0.5f));
-            coinmap.SetTile(coinmap.WorldToCell(hitPosition), null);
-            hitPosition = new Vector2(transform.position.x, (transform.position.y + -0.5f));
-            coinmap.SetTile(coinmap.WorldToCell(hitPosition), null);
-            hitPosition = new Vector2((transform.position.x + 0.5f), transform.position.y);
-            coinmap.SetTile(coinmap.WorldToCell(hitPosition), null);
-            hitPosition = new Vector2((transform.position.x + -0.5f), transform.position.y);
-            coinmap.SetTile(coinmap.WorldToCell(hitPosition), null);
-            hitPosition = new Vector2((transform.position.x + -0.5f), (transform.position.y + -0.5f));
-            coinmap.SetTile(coinmap.WorldToCell(hitPosition), null);
-            hitPosition = new Vector2((transform.position.x + 0.5f), (transform.position.y + -0.5f));
-            coinmap.SetTile(coinmap.WorldToCell(hitPosition), null);
-            hitPosition = new Vector2((transform.position.x + 0.5f), (transform.position.y + 0.5f));
-            coinmap.SetTile(coinmap.WorldToCell(hitPosition), null);
-            hitPosition = new Vector2((transform.position.x + -0.5f), (transform.position.y + 0.5f));
-            coinmap.SetTile(coinmap.WorldToCell(hitPosition), null);
-            gm.CoinGet();
-        }
-
-        //when hitting the goal
-        if(collision.CompareTag("goal")){
-            gm.Goal();
-        }
-    }
-
-    //animator
-    private void UpdateAnim(){
-        AnimState state;
-        if(xvel > 0.1f){
-            state = AnimState.running;
-            sprite.flipX = false;
-        }
-        else if(xvel < -0.1f){
-            state = AnimState.running;
-            sprite.flipX = true;
-        }
-        else{
-            state = AnimState.idle;
-        }
-
-        if(rb.velocity.y > 0.1f){
-            state = AnimState.jumping;
-        }
-        else if(rb.velocity.y < -0.1f){
-            state = AnimState.falling;
-        }
-
-        anim.SetInteger("state", (int)state);
-    }
-
-    //spawns the double jump particles
-    private void DJParticle(){
-        Rigidbody2D DoubleJumpParticle = Instantiate(DJPrefab, DJPSpawn.position, Quaternion.identity);
     }
 
     //makes the box casts visible in unity

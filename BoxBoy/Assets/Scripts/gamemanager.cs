@@ -6,6 +6,9 @@ using TMPro;
 
 public class gamemanager : MonoBehaviour
 {
+    //death variable
+    private bool dead = false;
+
     //coincount
     public int coincount = 0;
 
@@ -30,6 +33,12 @@ public class gamemanager : MonoBehaviour
             SceneManager.LoadScene(0);
         }
 
+        //restart if r is pressed when the player is dead
+        if(Input.GetKeyDown("r") && dead == true){
+            Time.timeScale = 1;
+            Continue();
+        }
+
         //timer
         timer += Time.deltaTime;
         timertxt.text = "TIME: " + Mathf.Round(timer * 100f) / 100f;
@@ -43,7 +52,12 @@ public class gamemanager : MonoBehaviour
 
     //game over
     public void GameOver(){
-        gameovertxt.text = "GAME OVER";
+        gameovertxt.text = "GAME OVER PRESS R TO RESTART";
+        Time.timeScale = 0;
+        dead = true;
+    }
+
+    private void Continue(){
         SceneManager.LoadScene(currentscene);
     }
 

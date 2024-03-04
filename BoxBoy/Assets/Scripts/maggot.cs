@@ -27,11 +27,11 @@ public class maggot : MonoBehaviour
 
     private void Move(){
         if(right == true){
-            rb.velocity = new Vector2(-2, 0);
+            rb.velocity = new Vector2(-100f * Time.deltaTime, 0);
             sprite.flipX = true;
         }
         else if(right == false){
-            rb.velocity = new Vector2(2, 0);
+            rb.velocity = new Vector2(100f * Time.deltaTime, 0);
             sprite.flipX = false;
         }
     }

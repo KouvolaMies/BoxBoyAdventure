@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class camracontroller : MonoBehaviour
 {
-    [SerializeField] private Transform playerpos;
+    public Transform playerpos;
     void Update()
     {
         transform.position = new Vector3(playerpos.position.x, playerpos.position.y, -10);

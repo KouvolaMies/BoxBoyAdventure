@@ -34,9 +34,9 @@ public class PlayerMovement : MonoBehaviour
         //sets the boxcasts to the right positions, just in case it gets reset for some reason
         boxSizeD = new Vector2(0.9f, 0.1f);
         castDistanceD = 0.47f;
-        boxSizeL = new Vector2(0.1f, 0.9f);
+        boxSizeL = new Vector2(0.1f, 0.8f);
         castDistanceL = 0.47f;
-        boxSizeR = new Vector2(0.1f, 0.9f);
+        boxSizeR = new Vector2(0.1f, 0.8f);
         castDistanceR = -0.47f;
     }
 
@@ -49,12 +49,15 @@ public class PlayerMovement : MonoBehaviour
             if(xvel < 0f){
                 xvel += (25f * Time.deltaTime);
             }
-            if(xvel < 0.1f && xvel > -0.1f){
+            if(xvel < 0.2f && xvel > -0.2f){
                 xvel = 0f;
             }
         }
         if(rb.velocity.x == 0){
             xvel = 0f;
+        }
+        if(rb.velocity.y < -30f){
+            rb.velocity = new Vector2(rb.velocity.x, -30f);
         }
         //reset double jump
         if(IsGrounded() || LeftWall() || RightWall()){

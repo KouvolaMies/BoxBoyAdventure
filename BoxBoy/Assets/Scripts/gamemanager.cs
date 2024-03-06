@@ -29,7 +29,7 @@ public class gamemanager : MonoBehaviour
 
     void Update(){
         //reset button for testing
-        if(Input.GetKeyDown("e")){
+        if(Input.GetKeyDown(KeyCode.Escape)){
             SceneManager.LoadScene(0);
         }
 
@@ -62,7 +62,7 @@ public class gamemanager : MonoBehaviour
     }
 
     public void Goal(){
-        if(currentscene < 1){
+        if(currentscene < (SceneManager.sceneCountInBuildSettings - 1)){
             SceneManager.LoadScene(currentscene + 1);
         }
         else{

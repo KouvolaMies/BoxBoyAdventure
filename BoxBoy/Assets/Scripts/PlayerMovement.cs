@@ -41,24 +41,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Update(){
-        //slow down momentum
-        if(moving == false){
-            if(xvel > 0f){
-                xvel -= (25f * Time.deltaTime);
-            }
-            if(xvel < 0f){
-                xvel += (25f * Time.deltaTime);
-            }
-            if(xvel < 0.2f && xvel > -0.2f){
-                xvel = 0f;
-            }
-        }
-        if(rb.velocity.x == 0){
-            xvel = 0f;
-        }
-        if(rb.velocity.y < -30f){
-            rb.velocity = new Vector2(rb.velocity.x, -30f);
-        }
         //reset double jump
         if(IsGrounded() || LeftWall() || RightWall()){
             DoubleJump = true;
@@ -74,6 +56,21 @@ public class PlayerMovement : MonoBehaviour
         else{
             Walljump = false;
             WalljumpTime = 0;
+        }
+        //slow down momentum
+        if(moving == false){
+            if(xvel > 0f){
+                xvel -= (25f * Time.deltaTime);
+            }
+            if(xvel < 0f){
+                xvel += (25f * Time.deltaTime);
+            }
+            if(xvel < 0.1f && xvel > -0.1f){
+                xvel = 0f;
+            }
+            if(rb.velocity.x < 1f && rb.velocity.x > -1f){
+                xvel = 0f;
+            }
         }
         //apply speed
         rb.velocity = new Vector2(xvel, rb.velocity.y);
